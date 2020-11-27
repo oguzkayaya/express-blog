@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const registerValidation = require("../validations/registerValidation");
+const bcrypt = require("bcryptjs");
 
 router.post("/", async function (req, res) {
   const validation = registerValidation(req.body);
@@ -11,10 +12,13 @@ router.post("/", async function (req, res) {
   if (isEmailExist)
     return res.status(400).json({ error: "Email address is already in use" });
 
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+
   const newUser = new User({
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPassword,
   });
   try {
     const savedUser = await newUser.save();
