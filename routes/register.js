@@ -1,7 +1,12 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const registerValidation = require("../validations/registerValidation");
 
 router.post("/", async function (req, res) {
+  const validation = registerValidation(req.body);
+  if (validation.error)
+    return res.status(400).json({ error: validation.error.details[0] });
+
   const newUser = new User({
     name: req.body.name,
     email: req.body.email,
