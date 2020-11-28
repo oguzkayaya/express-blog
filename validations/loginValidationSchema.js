@@ -6,15 +6,3 @@ const loginValidationSchema = Joi.object().keys({
 });
 
 module.exports = loginValidationSchema;
-
-// const validationOptions = {
-//   errors: {
-//     wrap: {
-//       label: "",
-//     },
-//   },
-// };
-
-// module.exports = function (data) {
-//   return loginValidationSchema.validate(data, validationOptions);
-// };
