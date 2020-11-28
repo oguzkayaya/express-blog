@@ -1,14 +1,11 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const loginValidation = require("../validations/loginValidation");
+const loginValidationSchema = require("../validations/loginValidationSchema");
+const validate = require("../validations/validate");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-router.post("/", async function (req, res) {
-  const validation = loginValidation(req.body);
-  if (validation.error)
-    return res.status(400).json({ error: validation.error.details[0].message });
-
+router.post("/", validate(loginValidationSchema), async function (req, res) {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(400).json({ error: "Email is not found" });
 

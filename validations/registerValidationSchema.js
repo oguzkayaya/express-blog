@@ -6,14 +6,4 @@ const registerValidationSchema = Joi.object().keys({
   password: Joi.string().min(6).required(),
 });
 
-const validationOptions = {
-  errors: {
-    wrap: {
-      label: "",
-    },
-  },
-};
-
-module.exports = function (data) {
-  return registerValidationSchema.validate(data, validationOptions);
-};
+module.exports = registerValidationSchema;

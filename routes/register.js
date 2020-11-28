@@ -1,13 +1,10 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const registerValidation = require("../validations/registerValidation");
+const registerValidationSchema = require("../validations/registerValidationSchema");
+const validate = require("../validations/validate");
 const bcrypt = require("bcryptjs");
 
-router.post("/", async function (req, res) {
-  const validation = registerValidation(req.body);
-  if (validation.error)
-    return res.status(400).json({ error: validation.error.details[0].message });
-
+router.post("/", validate(registerValidationSchema), async function (req, res) {
   const isEmailExist = await User.findOne({ email: req.body.email });
   if (isEmailExist)
     return res.status(400).json({ error: "Email address is already in use" });
