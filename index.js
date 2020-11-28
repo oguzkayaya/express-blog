@@ -14,6 +14,7 @@ mongoose.connect(
 
 app.use(express.json());
 app.use("/register", require("./routes/register"));
+app.use("/login", require("./routes/login"));
 
 app.listen(3000, function () {
   console.log("Started on port 3000");
