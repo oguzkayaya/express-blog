@@ -61,7 +61,10 @@ router.put(
           .status(400)
           .json({ error: "You can update only your posts" });
       try {
-        const updatedPost = await updatingPost.updateOne(req.body);
+        const updatedPost = await updatingPost.updateOne({
+          ...req.body,
+          updateDate: Date.now(),
+        });
         return res.json({ updatedPost });
       } catch (error) {
         return res.status(400).json({ error: "Post cannot updated" });

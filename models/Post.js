@@ -20,9 +20,13 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  date: {
+  createDate: {
     type: Date,
     default: Date.now,
+  },
+  updateDate: {
+    type: Date,
+    default: null,
   },
 });
 

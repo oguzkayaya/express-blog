@@ -82,6 +82,7 @@ router.put(
       try {
         const updatedComment = await updatingComment.updateOne({
           description: req.body.description,
+          updateDate: Date.now(),
         });
         return res.json({ updatedComment });
       } catch (error) {
