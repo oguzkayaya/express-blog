@@ -94,4 +94,40 @@ router.put(
   }
 );
 
+router.get("/like/:commentId", verifyToken, async function (req, res) {
+  try {
+    const comment = await Comment.findOne({ _id: req.params.commentId });
+    if (!comment.likes.includes(req.tokenContext.userId)) {
+      comment.dislikes.pull(req.tokenContext.userId);
+      comment.likes.push(req.tokenContext.userId);
+      await comment.save();
+      return res.json("like added");
+    } else {
+      comment.likes.pull(req.tokenContext.userId);
+      await comment.save();
+      return res.json("like removed");
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
+router.get("/dislike/:commentId", verifyToken, async function (req, res) {
+  try {
+    const comment = await Post.findOne({ _id: req.params.commnetId });
+    if (!comment.dislikes.includes(req.tokenContext.userId)) {
+      comment.likes.pull(req.tokenContext.userId);
+      comment.dislikes.push(req.tokenContext.userId);
+      await comment.save();
+      return res.json("dislike added");
+    } else {
+      comment.dislikes.pull(req.tokenContext.userId);
+      await comment.save();
+      return res.json("dislike removed");
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
 module.exports = router;

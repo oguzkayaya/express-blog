@@ -4,6 +4,7 @@ const verifyToken = require("../verifyToken");
 const validate = require("../validations/validate");
 const newPostValidationSchema = require("../validations/newPostValidationSchema");
 const updatePostValidationSchema = require("../validations/updatePostValidationSchema");
+const { json } = require("express");
 
 router.get("/", async function (req, res) {
   try {
@@ -74,5 +75,41 @@ router.put(
     }
   }
 );
+
+router.get("/like/:postId", verifyToken, async function (req, res) {
+  try {
+    const post = await Post.findOne({ _id: req.params.postId });
+    if (!post.likes.includes(req.tokenContext.userId)) {
+      post.dislikes.pull(req.tokenContext.userId);
+      post.likes.push(req.tokenContext.userId);
+      await post.save();
+      return res.json("like added");
+    } else {
+      post.likes.pull(req.tokenContext.userId);
+      await post.save();
+      return res.json("like removed");
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
+router.get("/dislike/:postId", verifyToken, async function (req, res) {
+  try {
+    const post = await Post.findOne({ _id: req.params.postId });
+    if (!post.dislikes.includes(req.tokenContext.userId)) {
+      post.likes.pull(req.tokenContext.userId);
+      post.dislikes.push(req.tokenContext.userId);
+      await post.save();
+      return res.json("dislike added");
+    } else {
+      post.dislikes.pull(req.tokenContext.userId);
+      await post.save();
+      return res.json("dislike removed");
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
 
 module.exports = router;
