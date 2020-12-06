@@ -4,11 +4,10 @@ const verifyToken = require("../verifyToken");
 const validate = require("../validations/validate");
 const newPostValidationSchema = require("../validations/newPostValidationSchema");
 const updatePostValidationSchema = require("../validations/updatePostValidationSchema");
-const { json } = require("express");
 
 router.get("/", async function (req, res) {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate("userId", "name");
     return res.json({ posts });
   } catch (error) {
     return res.status(400).json({ error });
