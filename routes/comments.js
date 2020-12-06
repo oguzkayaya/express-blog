@@ -19,7 +19,7 @@ router.post(
       const savedComment = await newComment.save();
       return res.json({ savedComment });
     } catch (error) {
-      return res.status(400).json({ error });
+      return res.status(400).json({ error: "Some error occured" });
     }
   }
 );
@@ -31,7 +31,7 @@ router.get("/post/:postId", async function (req, res) {
     });
     return res.json({ postsComments });
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 
@@ -42,7 +42,7 @@ router.get("/user/:userId", async function (req, res) {
     });
     return res.json({ usersComments });
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 
@@ -108,7 +108,7 @@ router.get("/like/:commentId", verifyToken, async function (req, res) {
       return res.json("like removed");
     }
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 
@@ -126,7 +126,7 @@ router.get("/dislike/:commentId", verifyToken, async function (req, res) {
       return res.json("dislike removed");
     }
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 

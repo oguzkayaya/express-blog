@@ -10,7 +10,7 @@ router.get("/", async function (req, res) {
     const posts = await Post.find({}).populate("userId", "name");
     return res.json({ posts });
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 
@@ -28,7 +28,7 @@ router.post(
       const savedPost = await newPost.save();
       return res.json({ savedPost });
     } catch (error) {
-      return res.status(400).json({ error });
+      return res.status(400).json({ error: "Some error occured" });
     }
   }
 );
@@ -89,7 +89,7 @@ router.get("/like/:postId", verifyToken, async function (req, res) {
       return res.json("like removed");
     }
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 
@@ -107,7 +107,7 @@ router.get("/dislike/:postId", verifyToken, async function (req, res) {
       return res.json("dislike removed");
     }
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: "Some error occured" });
   }
 });
 
