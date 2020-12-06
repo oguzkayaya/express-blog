@@ -7,7 +7,21 @@ const updatePostValidationSchema = require("../validations/updatePostValidationS
 
 router.get("/", async function (req, res) {
   try {
-    const posts = await Post.find({}).populate("userId", "name");
+    const posts = await Post.find({})
+      .populate("userId", "name")
+      .sort("-createDate")
+      .limit(10);
+    return res.json({ posts });
+  } catch (error) {
+    return res.status(400).json({ error: "Some error occured" });
+  }
+});
+
+router.get("/all", async function (req, res) {
+  try {
+    const posts = await Post.find({})
+      .populate("userId", "name")
+      .sort("-createDate");
     return res.json({ posts });
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
