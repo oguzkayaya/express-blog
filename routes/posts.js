@@ -28,6 +28,17 @@ router.get("/all", async function (req, res) {
   }
 });
 
+router.get("/:postId", async function (req, res) {
+  try {
+    const post = await Post.findOne({ _id: req.params.postId }).populate(
+      "userId"
+    );
+    return res.json({ post });
+  } catch (error) {
+    return res.status(400).json({ error: "Some error occured" });
+  }
+});
+
 router.post(
   "/",
   verifyToken,
