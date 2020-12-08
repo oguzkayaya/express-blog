@@ -12,7 +12,6 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 1,
-    maxlength: 1024,
     trim: true,
   },
   userId: {
