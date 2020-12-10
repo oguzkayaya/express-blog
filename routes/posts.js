@@ -31,7 +31,8 @@ router.get("/all", async function (req, res) {
 router.get("/:postId", async function (req, res) {
   try {
     const post = await Post.findOne({ _id: req.params.postId }).populate(
-      "userId"
+      "userId",
+      "name"
     );
     return res.json({ post });
   } catch (error) {

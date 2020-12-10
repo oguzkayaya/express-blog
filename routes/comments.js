@@ -28,7 +28,7 @@ router.get("/post/:postId", async function (req, res) {
   try {
     const postsComments = await Comment.find({
       postId: req.params.postId,
-    });
+    }).populate("userId", "name");
     return res.json({ postsComments });
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
@@ -39,7 +39,7 @@ router.get("/user/:userId", async function (req, res) {
   try {
     const usersComments = await Comment.find({
       userId: req.params.userId,
-    });
+    }).populate("postId", "title");
     return res.json({ usersComments });
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
