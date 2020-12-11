@@ -26,10 +26,35 @@ router.post(
 
 router.get("/post/:postId", async function (req, res) {
   try {
+    const perPage = 10;
+    const totalCommentCount = await Comment.countDocuments({
+      postId: req.params.postId,
+    });
+    const lastPage =
+      Math.floor(totalCommentCount / perPage) +
+      (totalCommentCount % 10 === 0 ? 0 : 1);
+    const reqPage = req.query.page;
+    const page = !parseInt(reqPage)
+      ? reqPage == "last"
+        ? lastPage
+        : 1
+      : reqPage >= 1 && reqPage <= lastPage
+      ? reqPage
+      : reqPage < 1
+      ? 1
+      : lastPage;
     const postsComments = await Comment.find({
       postId: req.params.postId,
-    }).populate("userId", "name");
-    return res.json({ postsComments });
+    })
+      .populate("userId", "name")
+      .limit(perPage)
+      .skip(perPage * (page - 1));
+
+    return res.json({
+      postsComments,
+      page,
+      lastPage,
+    });
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
   }
