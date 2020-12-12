@@ -31,8 +31,10 @@ router.get("/post/:postId", async function (req, res) {
       postId: req.params.postId,
     });
     const lastPage =
-      Math.floor(totalCommentCount / perPage) +
-      (totalCommentCount % 10 === 0 ? 0 : 1);
+      totalCommentCount <= perPage
+        ? 1
+        : Math.floor(totalCommentCount / perPage) +
+          (totalCommentCount % 10 === 0 ? 0 : 1);
     const reqPage = req.query.page;
     const page = !parseInt(reqPage)
       ? reqPage == "last"
@@ -76,6 +78,8 @@ router.delete("/:commentId", verifyToken, async function (req, res) {
     const deletingComment = await Comment.findOne({
       _id: req.params.commentId,
     });
+    if (!deletingComment)
+      return res.status(400).json({ error: "Comment not found" });
     if (deletingComment.userId != req.tokenContext.userId)
       return res
         .status(400)

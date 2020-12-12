@@ -34,7 +34,8 @@ router.get("/:postId", async function (req, res) {
       "userId",
       "name"
     );
-    return res.json({ post });
+    if (post) return res.json({ post });
+    return res.status(400).json({ error: "Post not found" });
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
   }

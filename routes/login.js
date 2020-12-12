@@ -21,7 +21,12 @@ router.post("/", validate(loginValidationSchema), async function (req, res) {
     process.env.JWT_SECRET
   );
 
-  return res.json({ token });
+  return res.json({
+    token,
+    userId: user._id,
+    userName: user.name,
+    userEmail: user.email,
+  });
 });
 
 module.exports = router;
