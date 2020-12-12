@@ -130,11 +130,21 @@ router.get("/like/:commentId", verifyToken, async function (req, res) {
       comment.dislikes.pull(req.tokenContext.userId);
       comment.likes.push(req.tokenContext.userId);
       await comment.save();
-      return res.json("like added");
+      return res.json({
+        likeCount: comment.likes.length,
+        dislikeCount: comment.dislikes.length,
+        liked: true,
+        disliked: false,
+      });
     } else {
       comment.likes.pull(req.tokenContext.userId);
       await comment.save();
-      return res.json("like removed");
+      return res.json({
+        likeCount: comment.likes.length,
+        dislikeCount: comment.dislikes.length,
+        liked: false,
+        disliked: false,
+      });
     }
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
@@ -143,16 +153,26 @@ router.get("/like/:commentId", verifyToken, async function (req, res) {
 
 router.get("/dislike/:commentId", verifyToken, async function (req, res) {
   try {
-    const comment = await Post.findOne({ _id: req.params.commnetId });
+    const comment = await Comment.findOne({ _id: req.params.commentId });
     if (!comment.dislikes.includes(req.tokenContext.userId)) {
       comment.likes.pull(req.tokenContext.userId);
       comment.dislikes.push(req.tokenContext.userId);
       await comment.save();
-      return res.json("dislike added");
+      return res.json({
+        likeCount: comment.likes.length,
+        dislikeCount: comment.dislikes.length,
+        liked: false,
+        disliked: true,
+      });
     } else {
       comment.dislikes.pull(req.tokenContext.userId);
       await comment.save();
-      return res.json("dislike removed");
+      return res.json({
+        likeCount: comment.likes.length,
+        dislikeCount: comment.dislikes.length,
+        liked: false,
+        disliked: false,
+      });
     }
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });

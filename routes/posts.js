@@ -109,11 +109,21 @@ router.get("/like/:postId", verifyToken, async function (req, res) {
       post.dislikes.pull(req.tokenContext.userId);
       post.likes.push(req.tokenContext.userId);
       await post.save();
-      return res.json("like added");
+      return res.json({
+        likeCount: post.likes.length,
+        dislikeCount: post.dislikes.length,
+        liked: true,
+        disliked: false,
+      });
     } else {
       post.likes.pull(req.tokenContext.userId);
       await post.save();
-      return res.json("like removed");
+      return res.json({
+        likeCount: post.likes.length,
+        dislikeCount: post.dislikes.length,
+        liked: false,
+        disliked: false,
+      });
     }
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
@@ -127,11 +137,21 @@ router.get("/dislike/:postId", verifyToken, async function (req, res) {
       post.likes.pull(req.tokenContext.userId);
       post.dislikes.push(req.tokenContext.userId);
       await post.save();
-      return res.json("dislike added");
+      return res.json({
+        likeCount: post.likes.length,
+        dislikeCount: post.dislikes.length,
+        liked: false,
+        disliked: true,
+      });
     } else {
       post.dislikes.pull(req.tokenContext.userId);
       await post.save();
-      return res.json("dislike removed");
+      return res.json({
+        likeCount: post.likes.length,
+        dislikeCount: post.dislikes.length,
+        liked: false,
+        disliked: false,
+      });
     }
   } catch (error) {
     return res.status(400).json({ error: "Some error occured" });
